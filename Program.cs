@@ -11,6 +11,7 @@ namespace BackendBookMannu
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddControllers();
 
             // Add services to the container.
             builder.Services.AddDbContext<LibraryContext>(options =>
@@ -37,14 +38,20 @@ namespace BackendBookMannu
             // Configurazione CORS
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AngularApp", policy =>
-                {
-                    policy.WithOrigins("http://localhost:4200")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
-                });
+                options.AddPolicy("AllowFrontend",
+                    policy =>
+                    {
+                        policy.WithOrigins(
+                                "http://localhost:4200",  // Angular default port
+                                "https://localhost:4200", // Angular with HTTPS
+                                "http://localhost:5173",  // Vite default port
+                                "https://localhost:5173"  // Vite with HTTPS
+                            )
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials(); // Se usi cookie-based auth
+                    });
             });
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -56,15 +63,14 @@ namespace BackendBookMannu
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Library API v1");
                 });
             }
-
-            app.UseHttpsRedirection();
-
             
-            app.UseCors("AngularApp");
-
+        
+            app.UseRouting();
+            app.UseCors("AllowFrontend"); 
+            app.UseAuthentication();
             app.UseAuthorization();
-            app.MapControllers();
 
+            app.MapControllers();
             app.Run();
         }
     }
