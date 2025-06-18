@@ -1,6 +1,6 @@
 ﻿namespace BackendBookMannu.Models.Dto
 {
-    public class CreateDTO
+    public class CreateBookDTO
     {
         public string Title { get; set; }
 
@@ -8,7 +8,7 @@
 
         public string? Author { get; set; }
 
-        public DateTime PublishDate { get; set; }
+        public DateOnly PublishDate { get; set; }
 
         public int CategoryId { get; set; }
     }

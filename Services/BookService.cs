@@ -104,5 +104,45 @@ namespace BackendBookMannu.Services
 
 
         }
+
+        public async Task<BookDTO?> CreateBook(CreateBookDTO bookToCreate)
+        {
+            if (!string.IsNullOrWhiteSpace(bookToCreate.Title) && bookToCreate.Title.Length > 250) return null;
+            if (bookToCreate.Img != null && bookToCreate.Img.Length > 2000) return null;
+            if (bookToCreate.Author != null && bookToCreate.Author.Length > 100) return null;
+
+            var categoryId = await _context.Categories.FindAsync(bookToCreate.CategoryId);
+            if (categoryId == null) return null;
+            {
+            }
+       
+
+            var book = new Book
+            {
+                Title = bookToCreate.Title,
+                Img = bookToCreate.Img,
+                Author = bookToCreate.Author,
+                PublishDate = bookToCreate.PublishDate,
+                CategoryId = categoryId.Id,
+            };
+
+            _context.Books.Add(book);
+            await _context.SaveChangesAsync();
+
+            return new BookDTO
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Img = book.Img,
+                Author = book.Author,
+                PublishDate = book.PublishDate,
+                IsAvailable = book.IsAvailable,
+                Category = new CategoryDTO
+                {
+                    Id = book.Category.Id,
+                    Name = book.Category.Name
+                },
+            };
+        }
     }
 }

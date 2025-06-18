@@ -1,5 +1,6 @@
 ﻿using BackendBookMannu.Data;
 using BackendBookMannu.Models;
+using BackendBookMannu.Models.Dto;
 using BackendBookMannu.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +54,14 @@ namespace BackendBookMannu.Controllers
             var result = await _bookService.GetBooksByTitle(title);
             if (result == null || !result.Any()) return NotFound($"No books found with the specified title '{title}'");
             return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostBook([FromBody] CreateBookDTO book)
+        {
+            var createdBook = await _bookService.CreateBook(book);
+            if (createdBook == null) return BadRequest("Book could not be created, invalid data provided");
+            return CreatedAtAction("GetBookByID", new { Id = createdBook.Id }, createdBook);
         }
     }
 }

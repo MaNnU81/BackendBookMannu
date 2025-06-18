@@ -8,7 +8,6 @@ namespace BackendBookMannu.Services.Interface
         {
             Task<IEnumerable<CategoryDTO>> GetAllCategories();
             Task<CategoryDTO?> GetCategoryById(int id);
-
         }
     
 }
