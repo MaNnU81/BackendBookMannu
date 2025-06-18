@@ -1,0 +1,6 @@
+@BackendBookMannu_HostAddress = http://localhost:5255
+
+GET {{BackendBookMannu_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
