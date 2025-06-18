@@ -16,6 +16,7 @@ public partial class LibraryContext : DbContext
     {
     }
 
+
     public virtual DbSet<Book> Books { get; set; }
 
     public virtual DbSet<Category> Categories { get; set; }
